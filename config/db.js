@@ -1,20 +1,21 @@
 const mongoose = require("mongoose");
-
+const erorrMiddleware = require("../middlewares/errorMiddleware.js");
 
 async function connectDB() {
     const mongoUri = process.env.MONGODB_URI;
     if (!mongoUri) {
-        console.warn("⚠️  MONGODB_URI environment variable is not defined.");
-        return null; // Gracefully return instead of crashing
+        erorrMiddleware(new Error("MONGODB_URI is not defined"), null, null, null);
+        console.error("❌ MONGODB_URI is not defined in the environment variables.");
+        return null;
     }
     try {
         const connect = await mongoose.connect(mongoUri);
         console.log("✅ Database connected successfully");
         return connect;
     } catch (error) {
-        console.error("❌ MongoDB connection error:", error.message);
-        console.warn("⚠️  Failed to connect to the database.");
-        return null; // Avoid crashing the app
+        erorrMiddleware(error, null, null, null);
+        console.error("❌ Database connection failed:", error.message);
+        return null;
     }
 }
 

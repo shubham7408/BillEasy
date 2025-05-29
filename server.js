@@ -3,7 +3,10 @@ dotenv.config();
 const express = require("express");
 const app = express();
 const connectDB = require("./config/db.js");
+const erorrMiddleware = require("./middlewares/errorMiddleware.js");
 const PORT = process.env.PORT || 3000;
+
+app.use(erorrMiddleware);
 
 
 app.use(express.json());
@@ -27,6 +30,3 @@ app.get("/about", async (req, res) => {
 connectDB().then(app.listen(PORT, () => {
     console.log(`🚀 Server is running on http://localhost:${PORT}`);
 }));
-
-
-
