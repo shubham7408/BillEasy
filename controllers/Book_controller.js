@@ -80,8 +80,34 @@ async function createBook(req, res) {
     }
 }
 
+async function updateBook(req, res) {
+    try {
+        const bookId = req.params.id;
+        const updateBook = await Book.findByIdAndUpdate(bookId, req.body, { new: true, runValidators: true });
+        if (!updateBook) {
+            return res.status(404).json({
+                success: false,
+                message: "Book not found"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Book updated successfully",
+            data: updateBook
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
     getAllBooks,
     getBookById,
-    createBook
+    createBook,
+    updateBook
 };
